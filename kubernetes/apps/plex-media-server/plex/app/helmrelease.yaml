@@ -61,9 +61,3 @@ spec:
         issuerRef:
           name: letsencrypt-production
           kind: ClusterIssuer
-
-    extraVolumeMounts:
-      - name: config
-        mountPath: /config
-      - name: plex-data
-        mountPath: /data
