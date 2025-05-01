@@ -29,7 +29,6 @@ spec:
       pullPolicy: IfNotPresent
     env:
       TZ: Europe/Prague
-      PLEX_CLAIM: "${PLEX_CLAIM}"  # Replace with your actual claim token
     persistence:
       config:
         enabled: true
