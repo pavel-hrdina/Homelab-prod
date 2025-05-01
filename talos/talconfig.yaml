@@ -24,8 +24,8 @@ nodes:
     ipAddress: "10.101.2.145"
     installDisk: "/dev/sdb"
     machineSpec:
-      secureboot: false
-    talosImageURL: factory.talos.dev/installer/4b82055dec8c9571600a4ceeebddbe33b8ca9ec9a9aaefa64853b2bab3b76993
+      secureboot: true
+    talosImageURL: factory.talos.dev/installer-secureboot/4b82055dec8c9571600a4ceeebddbe33b8ca9ec9a9aaefa64853b2bab3b76993
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
