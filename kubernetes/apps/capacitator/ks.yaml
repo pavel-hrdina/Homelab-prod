@@ -41,7 +41,7 @@ metadata:
   namespace: flux-system
 spec:
   rules:
-    - host: gitops.home.pavelhrdinahomelab.org
+    - host: gitops.pavelhrdinahomelab.org
       http:
         paths:
           - pathType: Prefix
