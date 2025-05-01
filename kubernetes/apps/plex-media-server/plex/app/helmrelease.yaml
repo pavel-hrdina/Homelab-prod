@@ -32,11 +32,13 @@ spec:
     persistence:
       config:
         enabled: true
+        isPvc: true
         mountPath: /config
         storageClass: openebs-hostpath
         size: 2Gi
       data:
         enabled: true
+        isPvc: true
         mountPath: /data
         storageClass: openebs-hostpath
         size: 500Gi
