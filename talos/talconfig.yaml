@@ -40,6 +40,9 @@ nodes:
         vip:
           ip: "10.101.2.144"
 
+
+
+
 # Global patches
 patches:
   - "@./patches/global/machine-files.yaml"
