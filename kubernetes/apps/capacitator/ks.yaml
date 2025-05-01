@@ -25,7 +25,7 @@ spec:
   timeout: 5m
   wait: true
   prune: true
-  path: "./kubernetes/apps/capacitator/app"
+  path: "./kubernetes/apps/capacitator"
   sourceRef:
     kind: OCIRepository
     name: capacitor
