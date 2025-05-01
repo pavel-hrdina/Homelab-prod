@@ -12,8 +12,8 @@ additionalApiServerCertSans: &sans
   - "james.home.pavelhrdinahomelab.org"
 additionalMachineCertSans: *sans
 
-clusterPodNets: ["10.244.0.0/16"]
-clusterSvcNets: ["10.96.0.0/12"]
+clusterPodNets: ["172.244.0.0/16"]
+clusterSvcNets: ["172.20.0.0/16"]
 
 # Disable built-in CNI to use Cilium
 cniConfig:
@@ -22,7 +22,7 @@ cniConfig:
 nodes:
   - hostname: "james"
     ipAddress: "10.101.2.145"
-    installDisk: "/dev/sdc"
+    installDisk: "/dev/sdb"
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/4b82055dec8c9571600a4ceeebddbe33b8ca9ec9a9aaefa64853b2bab3b76993
