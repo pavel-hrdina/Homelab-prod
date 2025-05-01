@@ -14,9 +14,6 @@ kind: HelmRelease
 metadata:
   name: &app stash
 spec:
-  ufgrade:
-    interval: 1h
-    timeout: 5m
   interval: 1h
   chart:
     spec:
@@ -26,10 +23,6 @@ spec:
         kind: HelmRepository
         name: plex
         namespace: plex-media-server
-  ufgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
   values:
     serviceAccount:
       create: false
