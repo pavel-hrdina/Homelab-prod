@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: &app stash
+  namespace: plex-media-server
+spec:
+  interval: 1h
+  url: https://utkuozdemir.org/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app stash
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: plex
+      version: 2.1.1
+      sourceRef:
+        kind: HelmRepository
+        name: plex
+        namespace: plex-media-server
+  ufgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    serviceAccount:
+      create: false
+    persistance:
+      enabled: true
+      storageClass: "openebs-hostpath"
+      size: 2Gi
+    data:
+      enabled: true
+      storageClass: "openebs-hostpath"
+      size: 500Gi
+    apiVersion: networking.k8s.io/v1
+    service:
+      enabled: true
+      type: ClusterIP
+      port: 32400
+      targetPort: 32400
+    ingress:
+      enabled: true
+      className: internal
+      pathType: Prefix
+      paths:
+        - /
+      host:
+        - host: &host "plex.${SECRET_DOMAIN}"
+          paths:
+            - /
+      tls:
+        hosts:
+          - *host
+        enabled: true
+        secretName: plex-tls
+        certManager: true
+        issuerRef:
+          name: letsencrypt-production
+          kind: ClusterIssuer
+      containers:
+        - name: plex
+        - volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: plex-data
+              mountPath: /data
+
+
+
