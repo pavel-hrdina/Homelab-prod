@@ -20,4 +20,4 @@ jobs:
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         with:
-          scanArguments: --regex --entropy=False --json --fail
+          extra_args: --regex --entropy=False --json --fail --results=verified,unknown--results
