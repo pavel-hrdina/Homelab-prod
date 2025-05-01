@@ -5,10 +5,10 @@ clusterName: kubernetes
 talosVersion: "${talosVersion}"
 kubernetesVersion: "${kubernetesVersion}"
 
-endpoint: https://10.101.2.145:6443
+endpoint: https://10.101.2.144:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
-  - "10.101.2.145"
+  - "10.101.2.144"
   - "james.home.pavelhrdinahomelab.org"
 additionalMachineCertSans: *sans
 
@@ -38,7 +38,7 @@ nodes:
             gateway: "10.101.2.1"
         mtu: 1500
         vip:
-          ip: "10.101.2.145"
+          ip: "10.101.2.144"
 
 # Global patches
 patches:
