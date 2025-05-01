@@ -20,4 +20,4 @@ jobs:
       - name: TruffleHog Secret Scan
         uses: trufflesecurity/trufflehog@main
         with:
-          extra_args: --results=verified,unknown--results
+          extra_args: --results=verified,unknown
