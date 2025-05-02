@@ -71,7 +71,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: main
-                  port: 32400
+                  port: 80
 
     persistence:
       # --- Persistence Configuration ---
