@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: utkuozdemir
+  name: plex
   namespace: plex-media-server
 spec:
   interval: 1m
@@ -16,11 +16,11 @@ spec:
   interval: 5m
   chart:
     spec:
-      chart: utkuozdemir
+      chart: plex
       version: 2.1.1
       sourceRef:
         kind: HelmRepository
-        name: plex
+        name: utkuozdemir
         namespace: plex-media-server
   values:
     image:
