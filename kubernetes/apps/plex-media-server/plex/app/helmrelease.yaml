@@ -67,6 +67,17 @@ spec:
         # For MetalLB, you might need annotations like:
         # annotations:
         #   metallb.universe.tf/address-pool: your-address-pool-name
+    persistence:
+      config:
+        enabled: true # <--- ENABLE THIS FOR PLEX CONFI
+        type: pvc # <--- Use PVC for OpenEBS
+        mountPath: /config # <--- Explicitly set mount path for Plex config
+        readOnly: false # <--- Plex needs write access
+        storageClass: "obenebs-hostpath" # <--- **REPLACE WITH YOUR ACTUAL OPENEBS STORAGE CLASS NAME**
+        accessMode: ReadWriteOnce
+        size: 10Gi # <--- Adjust size as needed
+        retain: true # Recommended to avoid data loss on uninstall
+
 
     # --- Persistence Configuration is CRITICAL for Plex ---
     # The chart documentation will show the 'persistence' section.
