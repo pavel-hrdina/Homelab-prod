@@ -52,15 +52,11 @@ spec:
 
     service:
       main:
-        # Type: ClusterIP is only accessible within the cluster.
-        # You need a way to expose it externally (either LoadBalancer or Ingress).
-        type: ClusterIP # <--- Current config: Internal access only via this service type
         enabled: true
         ports:
           http: # This name 'http' corresponds to the port definition below
             enabled: true
-            port: 32400 # This is the SERVICE port - the port the Service listens on
-            protocol: TCP
+            port: 80 # This is the SERVICE port - the port the Service listens on
             # targetPort: This is the port your application listens on inside the pod.
             # If not specified, it defaults to 'port'. For Plex, 32400 is usually both.
             # targetPort: 32400 # <--- Often explicitly set, though defaults to 'port' if omitted
@@ -90,7 +86,7 @@ spec:
                   # 'name' should match the actual name of the Service created by the chart (likely 'plex')
                   name: plex
                   # 'port' must match the Service's 'port' (the one the Service listens on), NOT the targetPort
-                  port: 32400 # <--- Must match service.main.ports.http.port above
+                  port: http # <--- Must match service.main.ports.http.port above
 
       tls:
         enabled: true # Set to 'false' if you don't want TLS via Ingress
