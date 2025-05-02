@@ -83,7 +83,7 @@ spec:
         storageClass: openebs-hostpath # <<--- Replace with your actual OpenEBS local StorageClass name
         accessMode: ReadWriteOnce
         size: 100Gi # Recommend a suitable size for config (adjust as needed)
-        # existingClaim: your-plex-config-pvc # Use an existing PVC if you have one
+        existingClaim: pvc-f5c8adcf-7e6a-4c49-9731-be574ffb195c # Use an existing PVC if you have one
 
       # --- Media Persistence ---
       # This depends on where your media is stored and how you access it in Kubernetes.
