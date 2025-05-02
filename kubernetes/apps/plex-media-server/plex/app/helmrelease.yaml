@@ -2,43 +2,116 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: plex
+  name: gabe565
   namespace: plex-media-server
 spec:
   interval: 1m
-  url: https://utkuozdemir.org/helm-charts
+  url: https://charts.gabe565.com
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: plex
+  namespace: plex-media-server
 spec:
   interval: 5m
   chart:
     spec:
       chart: plex
-      version: 2.1.1
+      # Specify a chart version here for stability, e.g., "0.5.1"
+      # Find available versions on Artifact Hub: https://artifacthub.io/packages/helm/gabe565/plex
+      version: "" # <<--- Specify a version here!
       sourceRef:
         kind: HelmRepository
-        name: utkuozdemir
+        name: gabe565
         namespace: plex-media-server
   values:
+    # --- Configured Values for gabe565/plex chart ---
+    # Based on default values and your requirements.
+    # Consult the full chart values.yaml or documentation for advanced options.
+
     image:
-      repository: docker.io/linuxserver/plex
+      repository: ghcr.io/linuxserver/plex
       pullPolicy: IfNotPresent
+      # tag: "version-1.41.4.9463-630c9f557" # Uncomment and set a specific tag if needed
+
+    env:
+      TZ: "Europe/Prague" # <<--- Set your timezone
+      # Add other required environment variables here, e.g., PUID, PGID
+      # PUID: "1000" # Example PUID - find your user ID on the node
+      # PGID: "1000" # Example PGID - find your group ID on the node
+      # VERSION: "docker"
+
     service:
-      controller: plex
-      ports:
-        http:
-          port: 80
-      enabled: true
-      className: external
-      annotations:
-        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-      hosts:
-        - host: plex.${SECRET_DOMAIN}
-          paths:
-            - path: /
-              service:
-                identifier: plex
-                port: 80
+      main:
+        enabled: true
+        ports:
+          http:
+            port: 32400
+            # nodePort: 32400 # Uncomment and set a specific NodePort if needed
+        # type: LoadBalancer # <<--- Added LoadBalancer service type
+        # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB)
+        # For MetalLB, you might need annotations like:
+        # annotations:
+        #   metallb.universe.tf/address-pool: your-address-pool-name
+
+    ingress:
+      main:
+        enabled: true # Set to 'false' if you only want the LoadBalancer service
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          # Add other ingress annotations as needed
+          # kubernetes.io/tls-acme: "true"
+        hosts:
+          - host: plex.${SECRET_DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: main
+                  port: http
+
+    persistence:
+      # --- Persistence Configuration ---
+      # IMPORTANT: Configure persistence for /config and your media libraries.
+      # Consult the gabe565/plex chart values.yaml for all options (PVC, HostPath, NFS, etc.)
+
+      config:
+        enabled: true # Enable persistence for /config
+        # Use your OpenEBS local PV StorageClass here
+        storageClass: openebs-hostpath # <<--- Replace with your actual OpenEBS local StorageClass name
+        accessMode: ReadWriteOnce
+        size: 100Gi # Recommend a suitable size for config (adjust as needed)
+        # existingClaim: your-plex-config-pvc # Use an existing PVC if you have one
+
+      # --- Media Persistence ---
+      # This depends on where your media is stored and how you access it in Kubernetes.
+      # Configure ONE method below and configure it.
+
+      # Example: Using HostPath for Media
+      # media:
+      #   enabled: true
+      #   type: hostPath
+      #   hostPath: /path/to/your/media/on/node # <<--- Replace with the actual path on your node
+      #   mountPath: /data/media # <<--- Path inside the Plex container
+
+      # Example: Using NFS for Media
+      # media:
+      #    enabled: true
+      #    type: nfs
+      #    server: your-nfs-server-ip # <<--- Replace with your NFS server IP/hostname
+      #    path: /exports/your-media-share # <<--- Replace with the path to your NFS share
+      #    mountPath: /data/media # <<--- Path inside the Plex container
+      #    # mountOptions: # Add NFS mount options if needed
+      #    #   - nolock
+      #    #   - tcp
+
+      # Example: Using a separate PVC for Media
+      # media:
+      #   enabled: true
+      #   type: pvc
+      #   existingClaim: your-media-pvc-name # <<--- Name of your existing media PVC
+      #   mountPath: /data/media # <<--- Path inside the Plex container
+
+    # Add other chart-specific values here as needed (resources, nodeSelector, etc.)
