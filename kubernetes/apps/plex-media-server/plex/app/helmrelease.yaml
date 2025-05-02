@@ -55,18 +55,12 @@ spec:
 
     service:
       main:
-        enabled: true
+        type: LoadBalancer
         ports:
           http: # This name 'http' corresponds to the port definition below
-            targetPort: 32400 # This is the port your application listens on inside the pod.
+            port: 32400 # <<--- This is the port Plex uses for HTTP traffic
             # If not specified, it defaults to 'port'. For Plex, 32400 is usually both.
             # targetPort: 32400 # <--- Often explicitly set, though defaults to 'port' if omitted
-        # --- Alternative: Use LoadBalancer Service Type for direct external access ---
-        type: LoadBalancer # <<--- Uncomment this AND comment out type: ClusterIP above for a LoadBalancer
-        # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB IP allocation)
-        # For MetalLB, you might need annotations like:
-        # annotations:
-        #   metallb.universe.tf/address-pool: your-address-pool-name
     persistence:
       config:
         enabled: true # <--- ENABLE THIS FOR PLEX CONFI
