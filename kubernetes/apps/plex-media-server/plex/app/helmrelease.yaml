@@ -59,15 +59,20 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: internal
+        ingressClassName: external
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt-production
-        hosts:
-          - host: plex.local.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                pathType: Prefix
-        tls:
-          - hosts:
-              - plex.${SECRET_DOMAIN}
-            secretName: plex-tls-1-5dpml
+        rules:
+          - host: plex.${SECRET_DOMAIN}
+            http:
+              paths:
+                - backend:
+                  service: plex
+                  port:
+                    number: 32400
+                  path: /
+                  pathType: Prefix
+    status:
+      loadBalancer:
+        ingress:
+          - ip: 10.101.2.182
