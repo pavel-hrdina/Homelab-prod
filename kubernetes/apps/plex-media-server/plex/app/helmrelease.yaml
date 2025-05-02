@@ -59,6 +59,18 @@ spec:
     ingress:
       main:
         enabled: true
+      app:
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+        hosts:
+          - host: plex.${SECRET_DOMAIN}
+            paths:
+              - /
+            service:
+              name: plex-service
+              port: http
+
 
     status:
       loadBalancer:
