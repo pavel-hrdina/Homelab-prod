@@ -64,6 +64,6 @@ spec:
       config:
         enabled: true # <--- ENABLE THIS FOR PLEX CONFI
         readOnly: false # <--- Plex needs write access
-        storageClass: "openebs-hostpath" # <--- **REPLACE WITH YOUR ACTUAL OPENEBS STORAGE CLASS NAME**
+        storageClass: openebs-hostpath # <--- **REPLACE WITH YOUR ACTUAL OPENEBS STORAGE CLASS NAME**
         accessMode: ReadWriteOnce
         size: 10Gi # <--- Adjust size as needed
