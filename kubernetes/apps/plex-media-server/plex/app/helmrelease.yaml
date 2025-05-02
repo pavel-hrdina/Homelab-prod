@@ -58,8 +58,8 @@ spec:
         enabled: true
         ports:
           http: # This name 'http' corresponds to the port definition below
-            enabled: true
             protocol: TCP # This is the protocol used by the service
+            port: 80
             targetPort: 32400 # This is the port your application listens on inside the pod.
             # If not specified, it defaults to 'port'. For Plex, 32400 is usually both.
             # targetPort: 32400 # <--- Often explicitly set, though defaults to 'port' if omitted
