@@ -86,7 +86,7 @@ spec:
                   # 'name' should match the actual name of the Service created by the chart (likely 'plex')
                   name: plex
                   # 'port' must match the Service's 'port' (the one the Service listens on), NOT the targetPort
-                  port: http # <--- Must match service.main.ports.http.port above
+                  port: 80 # <--- Must match service.main.ports.http.port above
 
       tls:
         enabled: true # Set to 'false' if you don't want TLS via Ingress
