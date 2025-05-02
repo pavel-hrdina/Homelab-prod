@@ -18,9 +18,9 @@ spec:
   chart:
     spec:
       chart: plex
-      # Specify a chart version here for stability, e.g., "0.5.1"
+      # Specify a chart version here for stability.
       # Find available versions on Artifact Hub: https://artifacthub.io/packages/helm/gabe565/plex
-      version: "0.5.1" # <<--- Specify a version here!
+      version: "0.5.1" # <<--- Specify a version here! (Good job setting this!)
       sourceRef:
         kind: HelmRepository
         name: gabe565
@@ -37,20 +37,36 @@ spec:
 
     env:
       TZ: "Europe/Prague" # <<--- Set your timezone
-      # Add other required environment variables here, e.g., PUID, PGID
-      # PUID: "1000" # Example PUID - find your user ID on the node
-      # PGID: "1000" # Example PGID - find your group ID on the node
-      # VERSION: "docker"
+      # Add other required environment variables for linuxserver/plex here
+      # PUID and PGID are often required for file permissions
+      # Find your user/group ID on the node that will access your media files
+      # PUID: "1000" # Example PUID - **UNCOMMENT AND SET THIS**
+      # PGID: "1000" # Example PGID - **UNCOMMENT AND SET THIS**
+      # VERSION: "docker" # Often required for linuxserver images
+
+    # hostNetwork is correctly omitted/false here, using standard networking
+    # hostNetwork: false
+
+    # dnsPolicy is correctly omitted/defaulting to ClusterFirst
+    # dnsPolicy:
 
     service:
       main:
-        type: ClusterIP
+        # Type: ClusterIP is only accessible within the cluster.
+        # You need a way to expose it externally (either LoadBalancer or Ingress).
+        type: ClusterIP # <--- Current config: Internal access only via this service type
         enabled: true
         ports:
-          http:
-            port: 32400
-        #type: LoadBalancer # <<--- Added LoadBalancer service type
-        # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB)
+          http: # This name 'http' corresponds to the port definition below
+            enabled: true
+            port: 32400 # This is the SERVICE port - the port the Service listens on
+            protocol: TCP
+            # targetPort: This is the port your application listens on inside the pod.
+            # If not specified, it defaults to 'port'. For Plex, 32400 is usually both.
+            # targetPort: 32400 # <--- Often explicitly set, though defaults to 'port' if omitted
+        # --- Alternative: Use LoadBalancer Service Type for direct external access ---
+        # type: LoadBalancer # <<--- Uncomment this AND comment out type: ClusterIP above for a LoadBalancer
+        # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB IP allocation)
         # For MetalLB, you might need annotations like:
         # annotations:
         #   metallb.universe.tf/address-pool: your-address-pool-name
@@ -59,23 +75,63 @@ spec:
       main:
         enabled: true # Set to 'false' if you only want the LoadBalancer service
         primary: true
-        ingressClassName: external
+        ingressClassName: external # <--- Ensure you have an Ingress Controller installed that handles this class
         annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-          # Add other ingress annotations as needed
-          # kubernetes.io/tls-acme: "true"
+          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}" # Ensure ExternalDNS is running and configured
+          # Add other ingress annotations as needed (e.g. for Nginx or Traefik)
+          # kubernetes.io/ingress.class: nginx # If using older ingress.class annotation
+          # kubernetes.io/tls-acme: "true" # If using cert-manager with ingress annotation
         hosts:
-          - host: plex.${SECRET_DOMAIN}
+          - host: plex.${SECRET_DOMAIN} # <--- Ensure SECRET_DOMAIN is replaced or handled by Flux
             paths:
               - path: /
                 pathType: Prefix
                 service:
+                  # 'name' should match the actual name of the Service created by the chart (likely 'plex')
                   name: plex
+                  # 'port' must match the Service's 'port' (the one the Service listens on), NOT the targetPort
+                  port: 32400 # <--- Must match service.main.ports.http.port above
+
       tls:
-        enabled: true # Set to 'false' if you don't want TLS
-        secretName: plex-tls # <<--- Name of the TLS secret (ensure it exists)
-        cert-manager.io/cluster-issuer: "letsencrypt-production" # Uncomment if using cert-manager
+        enabled: true # Set to 'false' if you don't want TLS via Ingress
+        # The secret MUST exist in the namespace and contain valid TLS certs for the host
+        secretName: plex-tls # <<--- Name of the TLS secret (ensure it exists!)
+        # If using cert-manager to auto-create the secret, uncomment and configure the issuer annotation
+        # annotations:
+        #   cert-manager.io/cluster-issuer: "letsencrypt-production" # <--- Uncomment if using cert-manager
         hosts:
           - plex.${SECRET_DOMAIN}
 
-   
+    # --- Persistence Configuration is CRITICAL for Plex ---
+    # The chart documentation will show the 'persistence' section.
+    # You NEED to configure persistent volumes for:
+    # 1. The Plex configuration directory (/config)
+    # 2. Your media libraries (e.g., /tvshows, /movies)
+    # If these are not configured or misconfigured, Plex will not start correctly,
+    # which would cause the Service/Ingress to return a 503.
+    # persistence:
+    #   config:
+    #     enabled: true
+    #     storageClass: your-storage-class # <--- Set your storage class
+    #     size: 10Gi # Adjust size as needed
+    #   media: # Example for media, consult chart docs for exact structure
+    #     enabled: true
+    #     type: hostPath # Or PVC, NFS, etc.
+    #     hostPath: /path/to/your/media # <--- Set the actual path on your node(s)
+    #     mountPath: /data # <--- Set the path where media is mounted in the pod
+
+    # --- Probes ---
+    # Ensure probes are configured and targeting the correct port (targetPort: 32400)
+    # The chart defaults usually handle this correctly if the service port is right.
+    # probes:
+    #   liveness:
+    #     spec:
+    #       port: 32400 # <--- Ensure this matches the application's listening port
+    #   readiness:
+    #     spec:
+    #       port: 32400 # <--- Ensure this matches the application's listening port
+    #   startup:
+    #     spec:
+    #       port: 32400 # <--- Ensure this matches the application's listening port
+
+    # ... rest of the values ...
