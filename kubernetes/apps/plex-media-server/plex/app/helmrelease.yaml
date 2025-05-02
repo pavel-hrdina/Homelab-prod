@@ -37,6 +37,8 @@ spec:
 
     env:
       TZ: "Europe/Prague" # <<--- Set your timezone
+      PUID: "911" # Set explicitly
+      PGID: "911" # Set explicitly
       # Add other required environment variables here, e.g., PUID, PGID
       # PUID: "1000" # Example PUID - find your user ID on the node
       # PGID: "1000" # Example PGID - find your group ID on the node
