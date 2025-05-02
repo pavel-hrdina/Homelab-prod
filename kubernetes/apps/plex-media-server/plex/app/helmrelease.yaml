@@ -67,14 +67,6 @@ spec:
         # annotations:
         #   metallb.universe.tf/address-pool: your-address-pool-name
 
-      tls:
-        enabled: true # Set to 'false' if you don't want TLS via Ingress
-        # The secret MUST exist in the namespace and contain valid TLS certs for the host
-        secretName: plex-tls # <<--- Name of the TLS secret (ensure it exists!)
-        # If using cert-manager to auto-create the secret, uncomment and configure the issuer annotation
-        # annotations:
-        #   cert-manager.io/cluster-issuer: "letsencrypt-production" # <--- Uncomment if using cert-manager
-
     # --- Persistence Configuration is CRITICAL for Plex ---
     # The chart documentation will show the 'persistence' section.
     # You NEED to configure persistent volumes for:
