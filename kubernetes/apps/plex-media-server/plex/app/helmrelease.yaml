@@ -59,7 +59,6 @@ spec:
         ports:
           http: # This name 'http' corresponds to the port definition below
             enabled: true
-            port: 80 # This is the SERVICE port - the port the Service listens on
             protocol: TCP # This is the protocol used by the service
             targetPort: 32400 # This is the port your application listens on inside the pod.
             # If not specified, it defaults to 'port'. For Plex, 32400 is usually both.
@@ -80,5 +79,6 @@ spec:
         accessMode: ReadWriteOnce
         size: 10Gi # <--- Adjust size as needed
         retain: true # Recommended to avoid data loss on uninstall
+
 
 
