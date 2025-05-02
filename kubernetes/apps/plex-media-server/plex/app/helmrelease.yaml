@@ -37,8 +37,6 @@ spec:
 
     env:
       TZ: "Europe/Prague" # <<--- Set your timezone
-      PUID: "911" # Set explicitly
-      PGID: "911" # Set explicitly
       # Add other required environment variables here, e.g., PUID, PGID
       # PUID: "1000" # Example PUID - find your user ID on the node
       # PGID: "1000" # Example PGID - find your group ID on the node
@@ -50,6 +48,7 @@ spec:
         ports:
           http:
             port: 32400
+            nodePort: 32400
         #type: LoadBalancer # <<--- Added LoadBalancer service type
         # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB)
         # For MetalLB, you might need annotations like:
@@ -62,6 +61,8 @@ spec:
         ingressClassName: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/hostname: "plex.pavelhrdinahomelab.org" # <--- Explicitly set the hostname annotation
+
           # Add other ingress annotations as needed
           # kubernetes.io/tls-acme: "true"
         hosts:
@@ -85,6 +86,8 @@ spec:
         accessMode: ReadWriteOnce
         size: 100Gi # Recommend a suitable size for config (adjust as needed)
 
+    hostNetwork: true
+    dnsPolicy: ClusterFirstWithHostNet
       # --- Media Persistence ---
       # This depends on where your media is stored and how you access it in Kubernetes.
       # Configure ONE method below and configure it.
