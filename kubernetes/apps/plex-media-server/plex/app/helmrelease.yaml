@@ -43,7 +43,9 @@ spec:
       # Find your user/group ID on the node that will access your media files
       # PUID: "1000" # Example PUID - **UNCOMMENT AND SET THIS**
       # PGID: "1000" # Example PGID - **UNCOMMENT AND SET THIS**
-      # VERSION: "docker" # Often required for linuxserver images
+      PUID: "911" # Example PUID - **UNCOMMENT AND SET THIS**
+      PGID: "911" # Example PGID - **UNCOMMENT AND SET THIS**
+      VERSION: "docker" # Often required for linuxserver images
 
     # hostNetwork is correctly omitted/false here, using standard networking
     # hostNetwork: false
