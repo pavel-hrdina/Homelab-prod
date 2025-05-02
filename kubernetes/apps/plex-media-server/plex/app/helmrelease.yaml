@@ -37,6 +37,7 @@ spec:
 
     env:
       TZ: "Europe/Prague" # <<--- Set your timezone
+      PLEX_CLAIM: "" # <<--- Leave empty for first run, or set to your claim tokeno
       # Add other required environment variables for linuxserver/plex here
       # PUID and PGID are often required for file permissions
       # Find your user/group ID on the node that will access your media files
@@ -51,7 +52,6 @@ spec:
     # dnsPolicy:
 
     service:
-      type: ClusterIP # <<--- Set to ClusterIP for internal access
       main:
         enabled: true
         ports:
@@ -79,36 +79,3 @@ spec:
         retain: true # Recommended to avoid data loss on uninstall
 
 
-    # --- Persistence Configuration is CRITICAL for Plex ---
-    # The chart documentation will show the 'persistence' section.
-    # You NEED to configure persistent volumes for:
-    # 1. The Plex configuration directory (/config)
-    # 2. Your media libraries (e.g., /tvshows, /movies)
-    # If these are not configured or misconfigured, Plex will not start correctly,
-    # which would cause the Service/Ingress to return a 503.
-    # persistence:
-    #   config:
-    #     enabled: true
-    #     storageClass: your-storage-class # <--- Set your storage class
-    #     size: 10Gi # Adjust size as needed
-    #   media: # Example for media, consult chart docs for exact structure
-    #     enabled: true
-    #     type: hostPath # Or PVC, NFS, etc.
-    #     hostPath: /path/to/your/media # <--- Set the actual path on your node(s)
-    #     mountPath: /data # <--- Set the path where media is mounted in the pod
-
-    # --- Probes ---
-    # Ensure probes are configured and targeting the correct port (targetPort: 32400)
-    # The chart defaults usually handle this correctly if the service port is right.
-    # probes:
-    #   liveness:
-    #     spec:
-    #       port: 32400 # <--- Ensure this matches the application's listening port
-    #   readiness:
-    #     spec:
-    #       port: 32400 # <--- Ensure this matches the application's listening port
-    #   startup:
-    #     spec:
-    #       port: 32400 # <--- Ensure this matches the application's listening port
-
-    # ... rest of the values ...
