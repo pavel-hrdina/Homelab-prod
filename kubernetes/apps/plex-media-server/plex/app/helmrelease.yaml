@@ -60,3 +60,10 @@ spec:
             port: 32400 # <<--- This is the port Plex uses for HTTP traffic
             # If not specified, it defaults to 'port'. For Plex, 32400 is usually both.
             # targetPort: 32400 # <--- Often explicitly set, though defaults to 'port' if omitted
+    persistence:
+      config:
+        enabled: true # <--- ENABLE THIS FOR PLEX CONFI
+        readOnly: false # <--- Plex needs write access
+        storageClass: "obenebs-hostpath" # <--- **REPLACE WITH YOUR ACTUAL OPENEBS STORAGE CLASS NAME**
+        accessMode: ReadWriteOnce
+        size: 10Gi # <--- Adjust size as needed
