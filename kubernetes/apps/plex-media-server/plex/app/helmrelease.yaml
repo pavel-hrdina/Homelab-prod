@@ -69,4 +69,4 @@ spec:
               - /
             service:
               name: plex-service
-              port: http
+              port: 80
