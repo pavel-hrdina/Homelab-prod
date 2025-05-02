@@ -6,7 +6,7 @@ metadata:
   namespace: plex-media-server
 spec:
   interval: 1h
-  url: https://k8s-home-lab.github.io/helm-charts
+  url: https://utkuozdemir.org/helm-charts
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -24,49 +24,21 @@ spec:
         name: plex
         namespace: plex-media-server
   values:
-    image:
-      repository: ghcr.io/onedr0p/plex
-      pullPolicy: IfNotPresent
-    env:
-      TZ: Europe/Prague
     service:
-      main:
-        primary: true
-        ports:
-          http:
-            port: 32400
-      dnla-tcp:
-        enabled: false
-        type: NodePort
-        ports:
-          dnla-tcp:
-            enabled: true
-            port: 32469
-            protocol: TCP
-            targetPort: 32469
-        externalTrafficPolicy: Local
-      dnla-udp:
-        enabled: false
-        type: NodePort
-        ports:
-          dnla-udp:
-            enabled: true
-            port: 1900
-            protocol: TCP
-            targetPort: 1900
-          externalTrafficPolicy: Local
+      controller: plex
+      ports:
+        http:
+          port: 80
+      enabled: true
+      className: external
+      annotations:
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+      hosts:
+        - host: plex.${SECRET_DOMAIN}
+          paths:
+            - path: /
+              service:
+                identifier: plex
+                port: 80
 
-    ingress:
-      main:
-        enabled: true
-      app:
-        className: external
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-        hosts:
-          - host: plex.${SECRET_DOMAIN}
-            paths:
-              - /
-            service:
-              name: plex-service
-              port: 80
+
