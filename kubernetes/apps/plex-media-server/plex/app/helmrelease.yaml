@@ -61,27 +61,11 @@ spec:
             # If not specified, it defaults to 'port'. For Plex, 32400 is usually both.
             # targetPort: 32400 # <--- Often explicitly set, though defaults to 'port' if omitted
         # --- Alternative: Use LoadBalancer Service Type for direct external access ---
-        # type: LoadBalancer # <<--- Uncomment this AND comment out type: ClusterIP above for a LoadBalancer
+        type: LoadBalancer # <<--- Uncomment this AND comment out type: ClusterIP above for a LoadBalancer
         # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB IP allocation)
         # For MetalLB, you might need annotations like:
         # annotations:
         #   metallb.universe.tf/address-pool: your-address-pool-name
-
-    ingress:
-      main:
-        enabled: true # Set to 'false' if you only want the LoadBalancer service
-        primary: true
-        ingressClassName: internal # <--- Ensure you have an Ingress Controller installed that handles this class
-        hosts:
-          - host: plex.${SECRET_DOMAIN} # <--- Ensure SECRET_DOMAIN is replaced or handled by Flux
-            paths:
-              - path: /
-                pathType: Prefix
-                service:
-                  # 'name' should match the actual name of the Service created by the chart (likely 'plex')
-                  name: plex
-                  # 'port' must match the Service's 'port' (the one the Service listens on), NOT the targetPort
-                  port: 80 # <--- Must match service.main.ports.http.port above
 
       tls:
         enabled: true # Set to 'false' if you don't want TLS via Ingress
