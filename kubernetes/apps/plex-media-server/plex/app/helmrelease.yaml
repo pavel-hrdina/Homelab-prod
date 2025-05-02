@@ -95,8 +95,6 @@ spec:
         # If using cert-manager to auto-create the secret, uncomment and configure the issuer annotation
         # annotations:
         #   cert-manager.io/cluster-issuer: "letsencrypt-production" # <--- Uncomment if using cert-manager
-        hosts:
-          - plex.${SECRET_DOMAIN}
 
     # --- Persistence Configuration is CRITICAL for Plex ---
     # The chart documentation will show the 'persistence' section.
