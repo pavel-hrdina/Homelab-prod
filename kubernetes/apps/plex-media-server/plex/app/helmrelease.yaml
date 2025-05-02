@@ -72,11 +72,6 @@ spec:
         enabled: true # Set to 'false' if you only want the LoadBalancer service
         primary: true
         ingressClassName: internal # <--- Ensure you have an Ingress Controller installed that handles this class
-        annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}" # Ensure ExternalDNS is running and configured
-          # Add other ingress annotations as needed (e.g. for Nginx or Traefik)
-          # kubernetes.io/ingress.class: nginx # If using older ingress.class annotation
-          # kubernetes.io/tls-acme: "true" # If using cert-manager with ingress annotation
         hosts:
           - host: plex.${SECRET_DOMAIN} # <--- Ensure SECRET_DOMAIN is replaced or handled by Flux
             paths:
