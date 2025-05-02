@@ -2,8 +2,8 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: utkuozdemir
-  namespace: plex
+  name: plex
+  namespace: plex-media-server
 spec:
   interval: 1h
   url: https://utkuozdemir.org/helm-charts
@@ -17,12 +17,12 @@ spec:
   interval: 1h
   chart:
     spec:
-      chart: plex
-      version: 7.1.4
+      chart: plex-media-server
+      version: 2.1.1
       sourceRef:
         kind: HelmRepository
         name: utkuozdemir
-        namespace: plex
+        namespace: flux-system
   values:
     image:
       repository: docker.io/linuxserver/plex
@@ -35,18 +35,11 @@ spec:
       enabled: true
       className: external
       annotations:
-        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"  # Replace ${SECRET_DOMAIN} with actual domain in your deployment
-    ingress:
-      enabled: true
-      className: external
-      annotations:
-        external-dns.alpha.kubernetes.io/target: "plex.${SECRET_DOMAIN}"  # Make sure the domain resolves to your service IP
+        external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
       hosts:
-        - host: plex.${SECRET_DOMAIN}  # Make sure this resolves to the correct IP
+        - host: plex.${SECRET_DOMAIN}
           paths:
             - path: /
-              pathType: Prefix  # Ensure you use a valid pathType like 'Prefix' or 'Exact'
-              backend:
-                service:
-                  name: plex  # Ensure this matches the service name deployed by the Plex chart
-                  port: 80
+              service:
+                identifier: plex
+                port: 80
