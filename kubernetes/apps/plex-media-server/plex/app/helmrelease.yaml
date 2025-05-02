@@ -37,7 +37,6 @@ spec:
 
     env:
       TZ: "Europe/Prague" # <<--- Set your timezone
-      PLEX_CLAIM: "" # <<--- Leave empty for first run, or set to your claim tokeno
       # Add other required environment variables for linuxserver/plex here
       # PUID and PGID are often required for file permissions
       # Find your user/group ID on the node that will access your media files
@@ -45,7 +44,6 @@ spec:
       # PGID: "1000" # Example PGID - **UNCOMMENT AND SET THIS**
       PUID: "911" # Example PUID - **UNCOMMENT AND SET THIS**
       PGID: "911" # Example PGID - **UNCOMMENT AND SET THIS**
-      VERSION: "docker" # Often required for linuxserver images
 
     # hostNetwork is correctly omitted/false here, using standard networking
     # hostNetwork: false
