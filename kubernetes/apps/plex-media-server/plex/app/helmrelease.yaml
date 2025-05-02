@@ -33,14 +33,14 @@ spec:
       config:
         enabled: true
         isPvc: true
-        mountPath: /config
         storageClass: openebs-hostpath
+        accessMode: ReadWriteOnce
         size: 2Gi
       data:
         enabled: true
         isPvc: true
-        mountPath: /data
         storageClass: openebs-hostpath
+        accessMode: ReadWriteOnce
         size: 500Gi
     service:
       enabled: true
@@ -59,3 +59,5 @@ spec:
           - hosts:
               - plex.${SECRET_DOMAIN}
             secretName: plex-tls
+    podLabels:
+      talos.dev/privileged: "true"
