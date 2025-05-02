@@ -59,7 +59,9 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: internal
+        annotations:
+          kubernetes.io/ingress.class: internal
+          cert-manager.io/cluster-issuer: letsencrypt-production
         hosts:
           - host: plex.${SECRET_DOMAIN}
             paths:
