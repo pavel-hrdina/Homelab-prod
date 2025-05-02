@@ -29,19 +29,6 @@ spec:
       pullPolicy: IfNotPresent
     env:
       TZ: Europe/Prague
-    persistence:
-      config:
-        enabled: true
-        isPvc: true
-        storageClass: openebs-hostpath
-        accessMode: ReadWriteOnce
-        size: 2Gi
-      data:
-        enabled: true
-        isPvc: true
-        storageClass: openebs-hostpath
-        accessMode: ReadWriteOnce
-        size: 500Gi
     service:
       enabled: true
       type: ClusterIP
