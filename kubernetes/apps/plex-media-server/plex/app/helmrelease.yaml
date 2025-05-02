@@ -70,31 +70,3 @@ spec:
             service:
               name: plex-service
               port: http
-
-
-    status:
-      loadBalancer:
-        ingress:
-          - ip: 10.101.2.182
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: plex
-  labels:
-    name: plex
-  anotations:
-    external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-    cert-manager.io/cluster-issuer: letsencrypt-production
-spec:
-  rules:
-  - host: "plex.${SECRET_DOMAIN}"
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: plex-service
-            port:
-              number: 80
