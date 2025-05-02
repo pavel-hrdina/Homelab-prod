@@ -70,4 +70,4 @@ spec:
         tls:
           - hosts:
               - plex.${SECRET_DOMAIN}
-            secretName: plex-tls-1
+            secretName: plex-tls-1-5dpml
