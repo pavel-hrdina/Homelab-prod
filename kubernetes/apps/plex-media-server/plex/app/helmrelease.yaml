@@ -44,11 +44,11 @@ spec:
 
     service:
       main:
+        type: ClusterIP
         enabled: true
         ports:
           http:
             port: 32400
-            nodePort: 32400
         #type: LoadBalancer # <<--- Added LoadBalancer service type
         # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB)
         # For MetalLB, you might need annotations like:
@@ -58,11 +58,10 @@ spec:
     ingress:
       main:
         enabled: true # Set to 'false' if you only want the LoadBalancer service
+        primary: true
         ingressClassName: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-          external-dns.alpha.kubernetes.io/hostname: "plex.pavelhrdinahomelab.org" # <--- Explicitly set the hostname annotation
-
           # Add other ingress annotations as needed
           # kubernetes.io/tls-acme: "true"
         hosts:
@@ -71,46 +70,12 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  identifier: main
-                  port: 80
+                  name: plex
+      tls:
+        enabled: true # Set to 'false' if you don't want TLS
+        secretName: plex-tls # <<--- Name of the TLS secret (ensure it exists)
+        cert-manager.io/cluster-issuer: "letsencrypt-production" # Uncomment if using cert-manager
+        hosts:
+          - plex.${SECRET_DOMAIN}
 
-    persistence:
-      # --- Persistence Configuration ---
-      # IMPORTANT: Configure persistence for /config and your media libraries.
-      # Consult the gabe565/plex chart values.yaml for all options (PVC, HostPath, NFS, etc.)
-
-      config:
-        enabled: true # Enable persistence for /config
-        # Use your OpenEBS local PV StorageClass here
-        storageClass: openebs-hostpath # <<--- Replace with your actual OpenEBS local StorageClass name
-        accessMode: ReadWriteOnce
-        size: 100Gi # Recommend a suitable size for config (adjust as needed)
-
-      # Configure ONE method below and configure it.
-
-      # Example: Using HostPath for Media
-      # media:
-      #   enabled: true
-      #   type: hostPath
-      #   hostPath: /path/to/your/media/on/node # <<--- Replace with the actual path on your node
-      #   mountPath: /data/media # <<--- Path inside the Plex container
-
-      # Example: Using NFS for Media
-      # media:
-      #    enabled: true
-      #    type: nfs
-      #    server: your-nfs-server-ip # <<--- Replace with your NFS server IP/hostname
-      #    path: /exports/your-media-share # <<--- Replace with the path to your NFS share
-      #    mountPath: /data/media # <<--- Path inside the Plex container
-      #    # mountOptions: # Add NFS mount options if needed
-      #    #   - nolock
-      #    #   - tcp
-
-      # Example: Using a separate PVC for Media
-      # media:
-      #   enabled: true
-      #   type: pvc
-      #   existingClaim: your-media-pvc-name # <<--- Name of your existing media PVC
-      #   mountPath: /data/media # <<--- Path inside the Plex container
-
-    # Add other chart-specific values here as needed (resources, nodeSelector, etc.)
+   
