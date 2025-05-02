@@ -51,6 +51,7 @@ spec:
     # dnsPolicy:
 
     service:
+      type: ClusterIP # <<--- Set to ClusterIP for internal access
       main:
         enabled: true
         ports:
