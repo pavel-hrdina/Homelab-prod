@@ -63,10 +63,8 @@ spec:
     persistence:
       config:
         enabled: true # <--- ENABLE THIS FOR PLEX CONFI
-        type: pvc # <--- Use PVC for OpenEBS
-        mountPath: /config # <--- Explicitly set mount path for Plex config
         readOnly: false # <--- Plex needs write access
         storageClass: "obenebs-hostpath" # <--- **REPLACE WITH YOUR ACTUAL OPENEBS STORAGE CLASS NAME**
         accessMode: ReadWriteOnce
-        size: 100Gi # <--- Adjust size as needed
+        size: 10Gi # <--- Adjust size as needed
         retain: true # Recommended to avoid data loss on uninstallt
