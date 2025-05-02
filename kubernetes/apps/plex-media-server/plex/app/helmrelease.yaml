@@ -59,5 +59,3 @@ spec:
           - hosts:
               - plex.${SECRET_DOMAIN}
             secretName: plex-tls
-    podLabels:
-      talos.dev/privileged: "true"
