@@ -24,6 +24,9 @@ spec:
         name: plex
         namespace: plex-media-server
   values:
+    image:
+      repository: docker.io/linuxserver/plex
+      pullPolicy: IfNotPresent
     service:
       controller: plex
       ports:
