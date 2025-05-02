@@ -20,7 +20,7 @@ spec:
       chart: plex
       # Specify a chart version here for stability, e.g., "0.5.1"
       # Find available versions on Artifact Hub: https://artifacthub.io/packages/helm/gabe565/plex
-      version: "" # <<--- Specify a version here!
+      version: "0.5.1" # <<--- Specify a version here!
       sourceRef:
         kind: HelmRepository
         name: gabe565
@@ -70,7 +70,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: main
-                  port: http
+                  port: 32400
 
     persistence:
       # --- Persistence Configuration ---
