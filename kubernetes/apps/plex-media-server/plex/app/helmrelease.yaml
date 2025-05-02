@@ -22,7 +22,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: utkuozdemir
-        namespace: flux-system
   values:
     image:
       repository: docker.io/linuxserver/plex
