@@ -87,6 +87,7 @@ spec:
         size: 100Gi # Recommend a suitable size for config (adjust as needed)
 
     hostNetwork: true
+    dnsPolicy: ClusterFirstWithHostNet
       # --- Media Persistence ---
       # This depends on where your media is stored and how you access it in Kubernetes.
       # Configure ONE method below and configure it.
