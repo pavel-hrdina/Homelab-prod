@@ -50,8 +50,7 @@ spec:
         ports:
           http:
             port: 32400
-            nodePort: 32400 # Uncomment and set a specific NodePort if needed
-        # type: LoadBalancer # <<--- Added LoadBalancer service type
+        type: LoadBalancer # <<--- Added LoadBalancer service type
         # annotations: {} # Add LoadBalancer specific annotations here if needed (e.g., for MetalLB)
         # For MetalLB, you might need annotations like:
         # annotations:
