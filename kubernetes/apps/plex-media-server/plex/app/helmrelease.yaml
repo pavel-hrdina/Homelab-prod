@@ -55,6 +55,7 @@ spec:
 
     service:
       main:
+        enabled: true # <--- Enable the main service
         type: LoadBalancer
         ports:
           http: # This name 'http' corresponds to the port definition below
@@ -69,8 +70,5 @@ spec:
         readOnly: false # <--- Plex needs write access
         storageClass: "obenebs-hostpath" # <--- **REPLACE WITH YOUR ACTUAL OPENEBS STORAGE CLASS NAME**
         accessMode: ReadWriteOnce
-        size: 10Gi # <--- Adjust size as needed
-        retain: true # Recommended to avoid data loss on uninstall
-
-
-
+        size: 100Gi # <--- Adjust size as needed
+        retain: true # Recommended to avoid data loss on uninstallt
